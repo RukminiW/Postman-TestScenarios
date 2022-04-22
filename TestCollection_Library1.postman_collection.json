@@ -1,0 +1,171 @@
+{
+	"info": {
+		"_postman_id": "fa7f8428-c87d-41af-807f-76f9b8f71b90",
+		"name": "Test Collection_Library",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "AddBook",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const JSONsData=pm.response.json();\r",
+							"\r",
+							"console.log(JSONsData.ID);\r",
+							"const Book_id=JSONsData.ID;\r",
+							"pm.environment.set(\"book_id\",Book_id);\r",
+							"pm.test(\"Validate Response\",function()\r",
+							"{\r",
+							"    pm.response.to.have.status(400);\r",
+							"    pm.expect(JSONsData).have.property(\"Msg\");\r",
+							"    pm.expect(JSONsData.Msg).to.eql(\"successfully added\");\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Validate Response time\", function()\r",
+							"{\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1200);\r",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json;charset=UTF-8\");\r",
+							"})\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const var1=pm.globals.get(\"CompanyCode\");\r",
+							"const var2=pm.variables.replaceIn('{{$randomInt}}');\r",
+							"pm.collectionVariables.set(\"test1\",var1 + var2);\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "password123",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Learn Appium Automation with Javas\",\r\n    \"isbn\": \"{{test1}}\",\r\n    \"aisle\": \"9717\",\r\n    \"author\": \"Katen Kite\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/Library/Addbook.php",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"Library",
+						"Addbook.php"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetBook",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/Library/GetBook.php?ID={{book_id}}",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"Library",
+						"GetBook.php"
+					],
+					"query": [
+						{
+							"key": "ID",
+							"value": "{{book_id}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteBook",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"ID\": \"{{book_id}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/Library/DeleteBook.php",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"Library",
+						"DeleteBook.php"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "test1",
+			"value": "",
+			"type": "default"
+		}
+	]
+}
